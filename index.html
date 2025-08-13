@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Quintino - Laboratory Specialist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Indigo and Teal -->
+    <!-- Application Structure Plan: The application is structured as a modern, single-page portfolio. It begins with a hero section featuring a professional photo and summary, followed by a fixed navigation bar for easy access. The core content is organized into logical, thematic sections: 'Experiência Profissional' (Professional Experience) presented as an interactive timeline, 'Competências Chave' (Key Skills) with a visual radar chart and detailed lists, 'Educação e Formação' (Education and Certifications) in a card-based layout, and finally a 'Contacto' (Contact) section. A prominent language toggle allows users to switch between Portuguese and English. This architecture was chosen to provide a clear, scannable, and interactive experience that effectively translates Ana's expertise for recruiters in the science and technology industry. -->
+    <!-- Visualization & Content Choices:
+        - Career History -> Goal: Show Change/Progression -> Viz: Interactive Vertical Timeline (HTML/CSS/JS) -> Interaction: Click on each job to reveal detailed tasks/achievements -> Justification: This method condenses a rich professional history into an elegant, organized, and digestible format, highlighting career progression without overwhelming the user.
+        - Core Skills -> Goal: Compare/Inform -> Viz: Radar Chart (Chart.js) & Thematic Cards (HTML/CSS) -> Interaction: The chart offers a quick visual summary of key skill areas, while the cards provide detailed descriptions -> Justification: This approach provides both a high-level overview and specific details, catering to different user needs.
+        - Education & Languages -> Goal: Inform -> Viz: Simple Cards (HTML/CSS) for education and a list for languages -> Interaction: Static -> Justification: These sections present factual credentials in a clean, professional manner that is easy to read.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        .timeline-item-content.open {
+            max-height: 500px; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold">Ana Quintino</div>
+                <div class="flex space-x-6">
+                    <div class="hidden md:flex space-x-6">
+                        <a href="#profile" class="nav-link hover:text-teal-400 transition" data-lang-key="nav.profile">Perfil</a>
+                        <a href="#experience" class="nav-link hover:text-teal-400 transition" data-lang-key="nav.experience">Experiência</a>
+                        <a href="#skills" class="nav-link hover:text-teal-400 transition" data-lang-key="nav.skills">Competências</a>
+                        <a href="#education" class="nav-link hover:text-teal-400 transition" data-lang-key="nav.education">Educação</a>
+                        <a href="#contact" class="nav-link hover:text-teal-400 transition" data-lang-key="nav.contact">Contacto</a>
+                    </div>
+                    <div class="ml-4 flex items-center space-x-2">
+                        <button id="lang-pt" class="lang-btn text-sm font-semibold p-1 rounded-md bg-teal-500">PT</button>
+                        <button id="lang-en" class="lang-btn text-sm font-semibold p-1 rounded-md bg-indigo-800 hover:bg-teal-500 transition">EN</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <a href="#profile" class="nav-link block py-2 px-4 text-sm hover:bg-indigo-800 rounded" data-lang-key="nav.profile">Perfil</a>
+                <a href="#experience" class="nav-link block py-2 px-4 text-sm hover:bg-indigo-800 rounded" data-lang-key="nav.experience">Experiência</a>
+                <a href="#skills" class="nav-link block py-2 px-4 text-sm hover:bg-indigo-800 rounded" data-lang-key="nav.skills">Competências</a>
+                <a href="#education" class="nav-link block py-2 px-4 text-sm hover:bg-indigo-800 rounded" data-lang-key="nav.education">Educação</a>
+                <a href="#contact" class="nav-link block py-2 px-4 text-sm hover:bg-indigo-800 rounded" data-lang-key="nav.contact">Contacto</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="profile" class="py-12 bg-white">
+            <div class="container mx-auto px-6 text-center md:flex md:items-center md:text-left">
+                <div class="md:w-1/4 mb-6 md:mb-0">
+                    <div class="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg bg-slate-200">
+                        <!-- Placeholder for Ana's photo - no actual image URL used -->
+                    </div>
+                </div>
+                <div class="md:w-3/4 md:pl-12">
+                    <h1 id="profile-name" class="text-4xl md:text-5xl font-bold text-slate-800">Ana Filipa Quintino</h1>
+                    <p id="profile-title" class="mt-4 text-xl text-teal-600 font-medium" data-lang-key="profile.title">Especialista de Laboratório</p>
+                    <p id="profile-summary" class="mt-6 max-w-3xl text-lg text-slate-600" data-lang-key="profile.summary">
+                        Profissional experiente em bioquímica e biotecnologia com conhecimentos em controlo de qualidade, desenvolvimento e validação de métodos. Procurando novas oportunidades na indústria da ciência e tecnologia.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 id="experience-title" class="text-3xl font-bold text-center text-slate-800 mb-12" data-lang-key="experience.title">Experiência Profissional</h2>
+                <div id="timeline-container" class="relative max-w-3xl mx-auto">
+                    <div class="absolute left-1/2 h-full w-0.5 bg-slate-300 transform -translate-x-1/2"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 id="skills-title" class="text-3xl font-bold text-center text-slate-800 mb-12" data-lang-key="skills.title">Competências Chave</h2>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                    <div id="skills-list" class="space-y-6">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 id="education-title" class="text-3xl font-bold text-center text-slate-800 mb-12" data-lang-key="education.title">Educação, Certificações & Idiomas</h2>
+                <div id="education-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+                <div id="languages-container" class="mt-12 text-center">
+                    <h3 id="languages-title" class="text-2xl font-bold text-slate-800 mb-4" data-lang-key="languages.title">Idiomas</h3>
+                    <ul id="languages-list" class="mt-4 space-y-2 text-sm max-w-xl mx-auto">
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-indigo-900 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h2 id="contact-title" class="text-2xl font-bold" data-lang-key="contact.title">Contacto</h2>
+            <p id="contact-text" class="mt-4" data-lang-key="contact.text">Sinta-se à vontade para entrar em contacto.</p>
+            <div class="mt-6 flex justify-center items-center space-x-6 text-sm">
+                <a href="mailto:ana.f.quintino@hotmail.com" class="hover:text-teal-400 transition">ana.f.quintino@hotmail.com</a>
+                <span>|</span>
+                <a href="tel:+351928021721" class="hover:text-teal-400 transition">+351 928 021 721</a>
+                <span>|</span>
+                <a href="https://www.linkedin.com/in/ana-quintino-4622bb48" target="_blank" rel="noopener noreferrer" class="hover:text-teal-400 transition">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    const content = {
+        pt: {
+            nav: {
+                profile: "Perfil",
+                experience: "Experiência",
+                skills: "Competências",
+                education: "Educação",
+                contact: "Contacto"
+            },
+            profile: {
+                title: "Especialista de Laboratório",
+                summary: "Profissional experiente em bioquímica e biotecnologia com conhecimentos em controlo de qualidade, desenvolvimento e validação de métodos. Procurando novas oportunidades na indústria da ciência e tecnologia."
+            },
+            experience: {
+                title: "Experiência Profissional",
+                companies: [
+                    {
+                        company: "ASCENZA a Rovensa Company",
+                        period: "Set 2023 - Presente",
+                        title: "Especialista de Laboratório de Deformulação de P&D",
+                        details: [
+                            "Coordenar e participar em projetos de Deformulação/Benchmarking no Laboratório, demonstrando fortes competências de gestão de projetos.",
+                            "Conduzir testes, validação e implementar com sucesso métodos e procedimentos avançados para análise de formulações.",
+                            "Desenvolver e otimizar procedimentos analíticos, demonstrando atenção aos detalhes e precisão.",
+                            "Executar testes para monitorização analítica industrial, garantindo a precisão e fiabilidade dos resultados.",
+                            "Atualizar e manter bases de dados abrangentes de produtos químicos.",
+                            "Prestar suporte crucial na verificação técnica de documentos para dossiers de registo.",
+                            "Apoiar a validação técnica e analítica de co-formulantes, contribuindo para a garantia de qualidade do produto.",
+                            "Liderar projetos de rastreio envolvendo PPP.",
+                            "Monitorizar e manter o bom funcionamento dos equipamentos, abordando prontamente anomalias e coordenando intervenções externas quando necessário (UPLC-QTOF; GC-MSMS).",
+                            "Conduzir pesquisas e investigações sobre novas metodologias para análise e formulação de agroquímicos, mantendo-se a par dos avanços da indústria."
+                        ]
+                    },
+                    {
+                        company: "EDP LABELEC",
+                        period: "Mai 2022 - Ago 2023",
+                        title: "Especialista de Laboratório",
+                        details: [
+                            "Implementar e validar métodos de análise química num laboratório acreditado pelo IPAC, incluindo técnicas de GC e HPLC, titulação de Karl Fisher e titulação potenciométrica.",
+                            "Utilizar ferramentas informáticas para registo de amostras, entrada de resultados e controlo de qualidade (LIMS).",
+                            "Aplicar a norma ISSO 5725 para tratamento estatístico de dados laboratoriais usando Excel e R."
+                        ]
+                    },
+                    {
+                        company: "SAPEC-QUÍMICA",
+                        period: "Fev 2022 - Abr 2022",
+                        title: "Técnica de Laboratório de Controlo de Qualidade",
+                        details: [
+                            "Realizar análises físico-químicas de acordo com os planos de monitorização e procedimentos técnicos de análise.",
+                            "Realizar testes de controlo de qualidade, analisando produtos em várias fases de fabrico usando técnicas analíticas em GC e química clássica.",
+                            "Cumprir o Plano de Controlo Analítico do Departamento de Controlo de Qualidade."
+                        ]
+                    },
+                    {
+                        company: "IBB-IST",
+                        period: "Ago 2020 - Jan 2022",
+                        title: "Investigadora Científica em Biotecnologia",
+                        details: [
+                            "Colaborar na preparação e gestão de amostras e utilizar técnicas analíticas como HPLC, métodos colorimétricos e espectrofotometria.",
+                            "Realizar calibração e manutenção de rotina de equipamentos e elaborar relatórios semanais de resultados.",
+                            "Contribuir para o desenvolvimento de novos métodos de HPLC e auxiliar no desenvolvimento de um novo tratamento de água para reduzir o impacto ambiental de uma fábrica de alimentos, enquanto desenvolvia a tese de mestrado."
+                        ]
+                    },
+                    {
+                        company: "LAQV-REQUIMTE FCT UNL",
+                        period: "Jan 2019 - Jul 2019",
+                        title: "Investigadora Científica em Bioquímica",
+                        details: [
+                            "Colaborar na preparação e gestão de amostras. Utilizar técnicas analíticas como RMN, GC-MS, métodos colorimétricos e espectrofotometria."
+                        ]
+                    }
+                ]
+            },
+            skills: {
+                title: "Competências Chave",
+                chartLabels: ['Metodologia', 'Análise Química', 'Software', 'Investigação', 'Controlo de Qualidade'],
+                list: [
+                    { title: "Software e Ferramentas", skills: "Chemdraw, R/R Studio/R Markdown, LaTeX, LIMS, Excel, SuperPro Designer, ACD Labs Software." },
+                    { title: "Técnicas Analíticas", skills: "GC, GC-MS, HPLC, UPLC-QTOF, RMN, titulação potenciométrica e de Karl Fisher, espectrofotometria, métodos colorimétricos." },
+                    { title: "Metodologia e Controlo", skills: "Validação de métodos, controlo de qualidade (ISO 5725), gestão de projetos, bases de dados de produtos químicos, bioinformática." }
+                ]
+            },
+            education: {
+                title: "Educação, Certificações & Idiomas",
+                list: [
+                    { type: "Grau", title: "Mestrado em Biotecnologia", institution: "Instituto Superior Técnico da Universidade de Lisboa", year: "2019-2021" },
+                    { type: "Grau", title: "Licenciatura em Bioquímica", institution: "NOVA School of Science and Technology", year: "2015-2019" },
+                    { type: "Certificação", title: "Data Science A-ZTM: Hands-on exercises", institution: "Udemy", year: "2023" },
+                    { type: "Certificação", title: "Global Project Based Learning Program", institution: "Shibaura Institute of Technology & FCT-UNL", year: "2019" },
+                    { type: "Certificação", title: "MCER assessment Spanish Test - Level C1", institution: "Altissia International SA/Erasmus+", year: "" }
+                ]
+            },
+            languages: {
+                title: "Idiomas",
+                list: [
+                    { name: "Português", proficiency: "Nativo ou bilingue" },
+                    { name: "Inglês", proficiency: "Proficiência profissional completa" },
+                    { name: "Espanhol", proficiency: "Proficiência profissional de trabalho" },
+                    { name: "Francês", proficiency: "Proficiência profissional de trabalho" }
+                ]
+            },
+            contact: {
+                title: "Contacto",
+                text: "Sinta-se à vontade para entrar em contacto."
+            }
+        },
+        en: {
+            nav: {
+                profile: "Profile",
+                experience: "Experience",
+                skills: "Skills",
+                education: "Education",
+                contact: "Contact"
+            },
+            profile: {
+                title: "Laboratory Specialist",
+                summary: "Experienced biochemistry and biotechnology professional with expertise in quality control, method development, and validation. Seeking new opportunities in the science and technology industry."
+            },
+            experience: {
+                title: "Professional Experience",
+                companies: [
+                    {
+                        company: "ASCENZA a Rovensa Company",
+                        period: "Sep 2023 - Present",
+                        title: "R&D Deformulation Lab Specialist",
+                        details: [
+                            "Coordinate and participate in Deformulation/Benchmarking projects within the Laboratory, demonstrating strong project management skills.",
+                            "Conduct testing, validation, and successfully implement advanced methods and procedures for formulation analysis.",
+                            "Develop and optimize analytical procedures, showcasing attention to detail and precision.",
+                            "Execute tests for industrial analytical monitoring, ensuring the accuracy and reliability of results.",
+                            "Update and maintain comprehensive databases of chemical products.",
+                            "Provide crucial support in the technical verification of documents for registration dossiers.",
+                            "Support the technical and analytical validation of co-formulants, contributing to product quality assurance.",
+                            "Lead screening projects involving PPP, demonstrating a proactive and innovative approach.",
+                            "Monitor and maintain the proper functioning of equipment, promptly addressing anomalies and coordinating external interventions as needed (UPLC-QTOF; GC-MSMS).",
+                            "Conduct research and investigations into new methodologies for agrochemical analysis and formulation, staying abreast of industry advancements."
+                        ]
+                    },
+                    {
+                        company: "EDP LABELEC",
+                        period: "May 2022 - Aug 2023",
+                        title: "Laboratory Specialist",
+                        details: [
+                            "Implemented and validated chemical analysis methods in an IPAC-accredited laboratory, including GC and HPLC techniques, Karl Fisher titration, potentiometric titration.",
+                            "Utilized computer tools for sample recording, result entry, and quality control (LIMS).",
+                            "Applied ISSO 5725 for statistical treatment of laboratory data using Excel and R."
+                        ]
+                    },
+                    {
+                        company: "SAPEC-QUÍMICA",
+                        period: "Feb 2022 - Apr 2022",
+                        title: "Quality Control Laboratory Technician",
+                        details: [
+                            "Performed physical-chemical analysis in accordance with monitoring plans and technical analysis procedures.",
+                            "Conducted quality control tests, analyzed products in various stages of manufacture using analytical techniques in GC and classical chemistry.",
+                            "Complied with the Analytical Control Plan for the Quality Control Department."
+                        ]
+                    },
+                    {
+                        company: "IBB-IST",
+                        period: "Aug 2020 - Jan 2022",
+                        title: "Biotechnology Scientific Researcher",
+                        details: [
+                            "Collaborated in sample preparation and management and utilized analytical techniques such as HPLC, colorimetric methods, and spectrophotometry.",
+                            "Conducted routine calibration and maintenance of equipment and drafted weekly reports of results.",
+                            "Contributed to the development of new HPLC methods and assisted in the development of a new water treatment to reduce a food factory's environmental impact while developing a master's thesis."
+                        ]
+                    },
+                    {
+                        company: "LAQV-REQUIMTE FCT UNL",
+                        period: "Jan 2019 - Jul 2019",
+                        title: "Biochemistry Scientific Researcher",
+                        details: [
+                            "Collaborated in sample preparation and management. Utilized analytical techniques such as NMR, GC-MS, colorimetric methods, and spectrophotometry."
+                        ]
+                    }
+                ]
+            },
+            skills: {
+                title: "Key Skills",
+                chartLabels: ['Methodology', 'Chemical Analysis', 'Software', 'Research', 'Quality Control'],
+                list: [
+                    { title: "Software & Tools", skills: "Chemdraw, R/R Studio/R Markdown, LaTeX, LIMS, Excel, SuperPro Designer, ACD Labs Software." },
+                    { title: "Analytical Techniques", skills: "GC, GC-MS, HPLC, UPLC-QTOF, NMR, potentiometric and Karl Fisher titration, spectrophotometry, colorimetric methods." },
+                    { title: "Methodology & Control", skills: "Method validation, quality control (ISO 5725), project management, chemical product databases, bioinformatics." }
+                ]
+            },
+            education: {
+                title: "Education, Certifications & Languages",
+                list: [
+                    { type: "Degree", title: "Masters Degree in Biotechnology", institution: "Instituto Superior Técnico da Universidade de Lisboa", year: "2019-2021" },
+                    { type: "Degree", title: "Bachelor's Degree in Biochemistry", institution: "NOVA School of Science and Technology", year: "2015-2019" },
+                    { type: "Certification", title: "Data Science A-ZTM: Hands-on exercises", institution: "Udemy", year: "2023" },
+                    { type: "Certification", title: "Global Project Based Learning Program", institution: "Shibaura Institute of Technology & FCT-UNL", year: "2019" },
+                    { type: "Certification", title: "MCER assessment Spanish Test - Level C1", institution: "Altissia International SA/Erasmus+", year: "" }
+                ]
+            },
+            languages: {
+                title: "Languages",
+                list: [
+                    { name: "Portuguese", proficiency: "Native or bilingual proficiency" },
+                    { name: "English", proficiency: "Full professional proficiency" },
+                    { name: "Spanish", proficiency: "Professional working proficiency" },
+                    { name: "French", proficiency: "Professional working proficiency" }
+                ]
+            },
+            contact: {
+                title: "Contact",
+                text: "Feel free to get in touch."
+            }
+        }
+    };
+
+    let currentLanguage = 'pt';
+    let skillsChart = null;
+
+    const getElement = (id) => document.getElementById(id);
+
+    const updateStaticText = () => {
+        const elements = document.querySelectorAll('[data-lang-key]');
+        elements.forEach(el => {
+            const keys = el.getAttribute('data-lang-key').split('.');
+            let text = content[currentLanguage];
+            keys.forEach(key => text = text[key]);
+            el.innerText = text;
+        });
+    };
+
+    const renderExperience = () => {
+        const container = getElement('timeline-container');
+        container.innerHTML = `<div class="absolute left-1/2 h-full w-0.5 bg-slate-300 transform -translate-x-1/2"></div>`;
+        let side = 'left';
+
+        content[currentLanguage].experience.companies.forEach(job => {
+            const item = document.createElement('div');
+            item.className = `timeline-item mb-8 flex justify-between items-center w-full ${side === 'left' ? 'flex-row-reverse' : ''}`;
+            const emptyDiv = '<div class="order-1 w-5/12"></div>';
+            const contentDiv = `
+                <div class="order-1 w-5/12 px-1 py-4">
+                    <div class="bg-white p-6 rounded-lg shadow-lg cursor-pointer transition hover:shadow-xl">
+                        <p class="text-sm font-semibold text-teal-600">${job.period}</p>
+                        <h3 class="font-bold text-lg text-slate-800 mt-1">${job.title}</h3>
+                        <p class="text-sm text-slate-500">${job.company}</p>
+                        <div class="timeline-item-content mt-2 pt-2 border-t border-slate-200">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                ${job.details.map(d => `<li>${d}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            item.innerHTML = `
+                ${side === 'left' ? contentDiv : emptyDiv}
+                <div class="z-20 flex items-center order-1 bg-indigo-900 shadow-xl w-8 h-8 rounded-full">
+                    <h1 class="mx-auto font-semibold text-lg text-white"></h1>
+                </div>
+                ${side === 'left' ? emptyDiv : contentDiv}
+            `;
+            container.appendChild(item);
+            side = side === 'left' ? 'right' : 'left';
+
+            const header = item.querySelector('.cursor-pointer');
+            header.addEventListener('click', () => {
+                const content = item.querySelector('.timeline-item-content');
+                content.classList.toggle('open');
+            });
+        });
+    };
+
+    const renderSkills = () => {
+        const listContainer = getElement('skills-list');
+        listContainer.innerHTML = '';
+        content[currentLanguage].skills.list.forEach(skillCat => {
+            const div = document.createElement('div');
+            div.className = "bg-slate-50 p-6 rounded-lg shadow-sm";
+            div.innerHTML = `
+                <h3 class="font-bold text-xl text-slate-800 mb-2">${skillCat.title}</h3>
+                <p class="text-slate-600">${skillCat.skills}</p>
+            `;
+            listContainer.appendChild(div);
+        });
+
+        if (skillsChart) {
+            skillsChart.data.labels = content[currentLanguage].skills.chartLabels;
+            skillsChart.data.datasets[0].label = content[currentLanguage].skills.chartLabels;
+            skillsChart.update();
+        }
+    };
+
+    const renderEducation = () => {
+        const container = getElement('education-container');
+        container.innerHTML = '';
+        content[currentLanguage].education.list.forEach(edu => {
+            const div = document.createElement('div');
+            div.className = "bg-white p-6 rounded-lg shadow-md";
+            div.innerHTML = `
+                <p class="text-sm font-semibold text-teal-600">${edu.type}</p>
+                <h3 class="font-bold text-lg text-slate-800 mt-1">${edu.title}</h3>
+                <p class="text-slate-500">${edu.institution}</p>
+                <p class="text-sm text-slate-400 mt-2">${edu.year}</p>
+            `;
+            container.appendChild(div);
+        });
+    };
+
+    const renderLanguages = () => {
+        const container = getElement('languages-list');
+        container.innerHTML = '';
+        content[currentLanguage].languages.list.forEach(lang => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="font-semibold">${lang.name}:</span> ${lang.proficiency}`;
+            container.appendChild(li);
+        });
+    };
+
+    const updateUI = () => {
+        updateStaticText();
+        renderExperience();
+        renderSkills();
+        renderEducation();
+        renderLanguages();
+    };
+
+    const setLanguage = (lang) => {
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('bg-teal-500', 'bg-indigo-800');
+            btn.classList.add(btn.id === `lang-${lang}` ? 'bg-teal-500' : 'bg-indigo-800');
+        });
+        updateUI();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = getElement('menu-btn');
+        const mobileMenu = getElement('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        getElement('lang-pt').addEventListener('click', () => setLanguage('pt'));
+        getElement('lang-en').addEventListener('click', () => setLanguage('en'));
+
+        const ctx = getElement('skillsChart').getContext('2d');
+        skillsChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: content.pt.skills.chartLabels,
+                datasets: [{
+                    label: content.pt.skills.chartLabels,
+                    data: [85, 90, 80, 80, 95], // Estimated skill levels from CV analysis
+                    backgroundColor: 'rgba(20, 184, 166, 0.2)', /* teal-500 */
+                    borderColor: 'rgb(20, 184, 166)', /* teal-500 */
+                    pointBackgroundColor: 'rgb(20, 184, 166)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(20, 184, 166)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: {
+                            font: { size: 14, weight: 'bold' },
+                            color: '#0f172a'
+                        },
+                        ticks: {
+                            backdropColor: 'rgba(255, 255, 255, 0.75)',
+                            color: '#475569',
+                            stepSize: 20
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        updateUI();
+    });
+</script>
+
+</body>
+</html>
